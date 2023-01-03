@@ -4,11 +4,17 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/nao23/monkey/lexer"
-	"github.com/nao23/monkey/token"
+	"github.com/nao23/monkey/parser"
 	"io"
 )
 
 const PROMPT = ">> "
+
+func printParseErrors(out io.Writer, errors []string) {
+	for _, msg := range errors {
+		_, _ = io.WriteString(out, "\t"+msg+"\n")
+	}
+}
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
@@ -20,9 +26,15 @@ func Start(in io.Reader, out io.Writer) {
 		}
 		line := scanner.Text()
 		l := lexer.New(line)
+		p := parser.New(l)
 
-		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-			fmt.Printf("%+v\n", tok)
+		program := p.ParseProgram()
+		if len(p.Errors()) != 0 {
+			printParseErrors(out, p.Errors())
+			continue
 		}
+
+		_, _ = io.WriteString(out, program.String())
+		_, _ = io.WriteString(out, "\n")
 	}
 }
