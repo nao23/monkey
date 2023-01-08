@@ -21,15 +21,13 @@ https://monkeylang.org
 
 
 ### Data Types
-#### Interger 
+#### Integer 
 
 ```shell
->> 2 * (3 + 4) / 5
-2
->> 2 * (3 + 4)
-14
->> 2 * (3 + 4) + 8 / 4
-16
+>> 1
+1
+>> -1
+-1
 ```
 
 #### Boolean
